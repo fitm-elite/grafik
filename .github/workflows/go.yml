@@ -34,10 +34,10 @@ jobs:
                   go mod download
 
             - name: Test
-              run: make test
+              run: make cover
 
             - name: Upload coverage to codecov.io
-              uses: codecov/codecov-action@v4
+              uses: codecov/codecov-action@v4.0.1
               with:
                   verbose: true
                   token: ${{ secrets.CODECOV_TOKEN }}
