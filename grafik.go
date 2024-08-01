@@ -54,6 +54,9 @@ type VertexFunc[T comparable] interface {
 	// If vertex doesn't exist, returns nil.
 	GetVertexByLabel(label T) *Vertex[T]
 
+	// GetAllVertices returns a slice of all existing vertices in the graph.
+	GetAllVertices() []*Vertex[T]
+
 	// ContainsVertex returns 'true' if this graph contains the specified vertex.
 	//
 	// If the specified vertex is nil, returns 'false'.
@@ -72,6 +75,16 @@ type EdgeFunc[T comparable] interface {
 	// If any of the specified vertices is nil, returns nil.
 	// If edge already exist, returns error.
 	AddEdge(from, to *Vertex[T], opts ...EdgeOptionFunc) (*Edge[T], error)
+
+	// GetAllEdges returns a slice of all edges connecting source vertex to
+	// target vertex if such vertices exist in this graph.
+	//
+	// In directed graph, it returns a single edge.
+	//
+	// If any of the specified vertices is nil, returns nil.
+	// If any of the vertices does not exist, returns nil.
+	// If both vertices exist but no edges found, returns an empty set.
+	GetAllEdges(from, to *Vertex[T]) []*Edge[T]
 
 	// ContainsEdge returns 'true' if and only if this graph contains an edge
 	// going from the source vertex to the target vertex.
@@ -146,6 +159,16 @@ func (g *grafik[T]) GetVertexByLabel(label T) *Vertex[T] {
 	return g.findVertex(label)
 }
 
+// GetAllVertices returns a slice of all existing vertices in the graph.
+func (g *grafik[T]) GetAllVertices() []*Vertex[T] {
+	vertices := make([]*Vertex[T], 0, len(g.vertices))
+	for _, vertex := range g.vertices {
+		vertices = append(vertices, vertex)
+	}
+
+	return vertices
+}
+
 // ContainsVertex returns 'true' if this graph contains the specified vertex.
 //
 // If the specified vertex is nil, returns 'false'.
@@ -217,6 +240,44 @@ func (g *grafik[T]) AddEdge(from, to *Vertex[T], opts ...EdgeOptionFunc) (*Edge[
 	g.addToEdgeMap(to, from, opts...)
 
 	return g.addToEdgeMap(from, to, opts...), nil
+}
+
+// GetAllEdges returns a slice of all edges connecting source vertex to
+// target vertex if such vertices exist in this graph.
+//
+// In directed graph, it returns a single edge.
+//
+// If any of the specified vertices is nil, returns nil.
+// If any of the vertices does not exist, returns nil.
+// If both vertices exist but no edges found, returns an empty set.
+func (g *grafik[T]) GetAllEdges(from, to *Vertex[T]) []*Edge[T] {
+	if from == nil || to == nil {
+		return nil
+	}
+
+	if g.findVertex(from.label) == nil {
+		return nil
+	}
+
+	if g.findVertex(to.label) == nil {
+		return nil
+	}
+
+	edges := make([]*Edge[T], 0, len(g.edges))
+
+	if destMap, ok := g.edges[from.label]; ok {
+		if edge, ok := destMap[to.label]; ok {
+			edges = append(edges, edge)
+		}
+	}
+
+	if destMap, ok := g.edges[to.label]; ok {
+		if edge, ok := destMap[from.label]; ok {
+			edges = append(edges, edge)
+		}
+	}
+
+	return edges
 }
 
 // ContainsEdge returns 'true' if and only if this graph contains an edge
