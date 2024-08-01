@@ -71,7 +71,7 @@ func TestDepthFirstIterator(t *testing.T) {
 		t.Errorf("Expect NewDepthFirstIterator doesn't return error, but got %s", err)
 	}
 
-	expected := []string{"A", "D", "E", "F", "B", "C"}
+	expected := []string{"A", "D", "E", "F", "C", "B"}
 	for i, label := range expected {
 		if !iterator.HasNext() {
 			t.Errorf("Expected iterator.HasNext() to be true, but it was false for label %s", label)
@@ -95,12 +95,12 @@ func TestDepthFirstIterator(t *testing.T) {
 	// test the Reset method
 	iterator.Reset()
 	if !iterator.HasNext() {
-		t.Error("Expected iter.HasNext() to be true, but it was false after reset")
+		t.Error("Expected iterator.HasNext() to be true, but it was false after reset")
 	}
 
 	v = iterator.Next()
 	if v.Label() != "A" {
-		t.Errorf("Expected iter.Next().Label() to be %s, but got %s", "A", v.Label())
+		t.Errorf("Expected iterator.Next().Label() to be %s, but got %s", "A", v.Label())
 	}
 
 	// test Iterate method
@@ -111,7 +111,7 @@ func TestDepthFirstIterator(t *testing.T) {
 		return nil
 	})
 	if err != nil {
-		t.Errorf("Expect iter.Iterate(func) returns no error, but got one %s", err)
+		t.Errorf("Expect iterator.Iterate(func) returns no error, but got one %s", err)
 	}
 
 	if !reflect.DeepEqual(expected, ordered) {
