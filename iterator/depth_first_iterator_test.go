@@ -66,7 +66,7 @@ func TestDepthFirstIterator(t *testing.T) {
 	}
 
 	// test depth first iteration
-	iterator, err := NewDepthFirstIterator[string](g, "A")
+	iterator, err := NewDepthFirstIterator(g, "A")
 	if err != nil {
 		t.Errorf("Expect NewDepthFirstIterator doesn't return error, but got %s", err)
 	}

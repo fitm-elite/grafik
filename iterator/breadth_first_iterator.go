@@ -39,7 +39,7 @@ func NewBreadthFirstIterator[T comparable](g grafik.Grafik[T], start T) (Iterato
 		return nil, grafik.ErrVertexDoesNotExist
 	}
 
-	return newBreadthFirstIterator[T](g, start), nil
+	return newBreadthFirstIterator(g, start), nil
 }
 
 func newBreadthFirstIterator[T comparable](g grafik.Grafik[T], start T) *breadthFirstIterator[T] {

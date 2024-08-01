@@ -66,7 +66,7 @@ func TestBreadFirstIterator(t *testing.T) {
 	}
 
 	// test depth first iteration
-	iterator, err := NewBreadthFirstIterator[string](g, "A")
+	iterator, err := NewBreadthFirstIterator(g, "A")
 	if err != nil {
 		t.Errorf("Expect NewBreadthFirstIterator doesn't return error, but got %s", err)
 	}
@@ -84,7 +84,7 @@ func TestBreadFirstIterator(t *testing.T) {
 	}
 
 	if iterator.HasNext() {
-		t.Error("Expected iter.HasNext() to be false, but it was true")
+		t.Error("Expected iterator.HasNext() to be false, but it was true")
 	}
 
 	v := iterator.Next()
@@ -95,12 +95,12 @@ func TestBreadFirstIterator(t *testing.T) {
 	// test the Reset method
 	iterator.Reset()
 	if !iterator.HasNext() {
-		t.Error("Expected iter.HasNext() to be true, but it was false after reset")
+		t.Error("Expected iterator.HasNext() to be true, but it was false after reset")
 	}
 
 	v = iterator.Next()
 	if v.Label() != "A" {
-		t.Errorf("Expected iter.Next().Label() to be %s, but got %s", "A", v.Label())
+		t.Errorf("Expected iterator.Next().Label() to be %s, but got %s", "A", v.Label())
 	}
 
 	// test Iterate method
@@ -111,7 +111,7 @@ func TestBreadFirstIterator(t *testing.T) {
 		return nil
 	})
 	if err != nil {
-		t.Errorf("Expect iter.Iterate(func) returns no error, but got one %s", err)
+		t.Errorf("Expect iterator.Iterate(func) returns no error, but got one %s", err)
 	}
 
 	if !reflect.DeepEqual(expected, ordered) {
@@ -124,7 +124,7 @@ func TestBreadFirstIterator(t *testing.T) {
 		return expectedErr
 	})
 	if err == nil {
-		t.Error("Expect iter.Iterate(func) returns error, but got nil")
+		t.Error("Expect iterator.Iterate(func) returns error, but got nil")
 	}
 
 	if !errors.Is(err, expectedErr) {
