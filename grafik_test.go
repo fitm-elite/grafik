@@ -92,6 +92,43 @@ func TestAddEdge(t *testing.T) {
 	}
 }
 
+func TestGetEdgeOfUndirected(t *testing.T) {
+	g := New[int]()
+
+	v1 := g.AddVertexByLabel(1)
+	v2 := g.AddVertexByLabel(2)
+
+	e, err := g.AddEdge(v1, v2)
+	if err != nil {
+		t.Errorf(testErrMsgError, err)
+	}
+
+	edge := g.GetEdge(v1, v2)
+	if !reflect.DeepEqual(e, edge) {
+		t.Errorf(testErrMsgNotEqual, e, edge)
+	}
+
+	edge = g.GetEdge(v1, nil)
+	if edge != nil {
+		t.Errorf("Expected nil, but got %+v", edge)
+	}
+
+	edge = g.GetEdge(nil, v2)
+	if edge != nil {
+		t.Errorf("Expected nil, but got %+v", edge)
+	}
+
+	edge = g.GetEdge(v2, NewVertex(4))
+	if edge != nil {
+		t.Errorf("Expected nil, but got %+v", edge)
+	}
+
+	edge = g.GetEdge(NewVertex(4), v1)
+	if edge != nil {
+		t.Errorf("Expected nil, but got %+v", edge)
+	}
+}
+
 func TestGetAllEdges(t *testing.T) {
 	g := New[string]()
 
