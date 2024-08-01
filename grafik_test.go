@@ -22,6 +22,7 @@ package grafik
 
 import (
 	"reflect"
+	"slices"
 	"testing"
 )
 
@@ -55,6 +56,26 @@ func TestGetVertexByLabel(t *testing.T) {
 	}
 }
 
+func TestGetAllVertices(t *testing.T) {
+	g := New[string]()
+
+	labels := []string{"A", "B", "C", "D", "E", "F"}
+	for _, label := range labels {
+		_ = g.AddVertexByLabel(label)
+	}
+
+	vertices := g.GetAllVertices()
+	if len(vertices) != len(labels) {
+		t.Errorf(testErrMsgNotEqual, len(labels), len(vertices))
+	}
+
+	for _, vertex := range vertices {
+		if matched := slices.Contains(labels, vertex.Label()); !matched {
+			t.Error(testErrMsgNotTrue)
+		}
+	}
+}
+
 func TestAddEdge(t *testing.T) {
 	g := New[string]()
 
@@ -68,6 +89,57 @@ func TestAddEdge(t *testing.T) {
 
 	if !g.ContainsEdge(vA, vB) {
 		t.Error(testErrMsgNotTrue)
+	}
+}
+
+func TestGetAllEdges(t *testing.T) {
+	g := New[string]()
+
+	vertices := map[string]*Vertex[string]{
+		"A": g.AddVertexByLabel("A"),
+		"B": g.AddVertexByLabel("B"),
+		"C": g.AddVertexByLabel("C"),
+	}
+
+	// add some edges
+	_, err := g.AddEdge(vertices["A"], vertices["B"])
+	if err != nil {
+		t.Errorf(testErrMsgError, err)
+	}
+
+	_, err = g.AddEdge(vertices["A"], vertices["C"])
+	if err != nil {
+		t.Errorf(testErrMsgError, err)
+	}
+
+	edges := g.GetAllEdges(vertices["A"], vertices["B"])
+	if len(edges) != 2 {
+		t.Errorf(testErrMsgWrongLen, 2, len(edges))
+	}
+
+	edges = g.GetAllEdges(vertices["B"], vertices["A"])
+	if len(edges) != 2 {
+		t.Errorf(testErrMsgWrongLen, 2, len(edges))
+	}
+
+	edges = g.GetAllEdges(vertices["B"], vertices["C"])
+	if len(edges) != 0 {
+		t.Errorf(testErrMsgWrongLen, 0, len(edges))
+	}
+
+	edges = g.GetAllEdges(nil, vertices["B"])
+	if edges != nil {
+		t.Errorf("Expected nil, but got %+v", edges)
+	}
+
+	edges = g.GetAllEdges(vertices["B"], NewVertex("D"))
+	if edges != nil {
+		t.Errorf("Expected nil, but got %+v", edges)
+	}
+
+	edges = g.GetAllEdges(NewVertex("D"), vertices["A"])
+	if edges != nil {
+		t.Errorf("Expected nil, but got %+v", edges)
 	}
 }
 

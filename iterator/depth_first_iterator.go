@@ -38,7 +38,7 @@ func NewDepthFirstIterator[T comparable](g grafik.Grafik[T], start T) (Iterator[
 		return nil, grafik.ErrVertexDoesNotExist
 	}
 
-	return newDepthFirstIterator[T](g, start), nil
+	return newDepthFirstIterator(g, start), nil
 }
 
 func newDepthFirstIterator[T comparable](g grafik.Grafik[T], start T) *depthFirstIterator[T] {
