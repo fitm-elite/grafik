@@ -86,6 +86,16 @@ type EdgeFunc[T comparable] interface {
 	// If both vertices exist but no edges found, returns an empty set.
 	GetAllEdges(from, to *Vertex[T]) []*Edge[T]
 
+	// GetEdge returns an edge connecting source vertex to target vertex
+	// if such vertices and such edge exist in this graph.
+	//
+	// In undirected graph, returns only the edge from the "from" vertex to
+	// the "to" vertex.
+	//
+	// If any of the specified vertices is nil, returns nil.
+	// If edge does not exist, returns nil.
+	GetEdge(from, to *Vertex[T]) *Edge[T]
+
 	// ContainsEdge returns 'true' if and only if this graph contains an edge
 	// going from the source vertex to the target vertex.
 	//
@@ -240,6 +250,34 @@ func (g *grafik[T]) AddEdge(from, to *Vertex[T], opts ...EdgeOptionFunc) (*Edge[
 	g.addToEdgeMap(to, from, opts...)
 
 	return g.addToEdgeMap(from, to, opts...), nil
+}
+
+// GetEdge returns an edge connecting source vertex to target vertex
+// if such vertices and such edge exist in this graph.
+//
+// In undirected graph, returns only the edge from the "from" vertex to
+// the "to" vertex.
+//
+// If any of the specified vertices is nil, returns nil.
+// If edge does not exist, returns nil.
+func (g *grafik[T]) GetEdge(from, to *Vertex[T]) *Edge[T] {
+	if from == nil || to == nil {
+		return nil
+	}
+
+	if g.findVertex(from.label) == nil {
+		return nil
+	}
+
+	if g.findVertex(to.label) == nil {
+		return nil
+	}
+
+	if destMap, ok := g.edges[from.label]; ok {
+		return destMap[to.label]
+	}
+
+	return nil
 }
 
 // GetAllEdges returns a slice of all edges connecting source vertex to
