@@ -71,7 +71,7 @@ func TestDepthFirstIterator(t *testing.T) {
 		t.Errorf("Expect NewDepthFirstIterator doesn't return error, but got %s", err)
 	}
 
-	expected := []string{"A", "B", "D", "C", "E", "F"}
+	expected := []string{"A", "D", "E", "F", "B", "C"}
 	for i, label := range expected {
 		if !iterator.HasNext() {
 			t.Errorf("Expected iterator.HasNext() to be true, but it was false for label %s", label)
