@@ -22,7 +22,6 @@ package centrality
 
 import (
 	"sort"
-	"sync"
 
 	"github.com/fitm-elite/grafik"
 	"github.com/fitm-elite/grafik/entity"
@@ -38,42 +37,22 @@ func DijkstraCentrality[T comparable](g entity.Grafik[T], opts ...options.Dijkst
 	vertices := g.GetAllVertices()
 	vertexPaths := make([]grafik.VertexPath[T], 0, len(vertices))
 
-	var mu sync.Mutex
-	var wg sync.WaitGroup
+	for _, vertex := range vertices {
+		label := vertex.Label()
+		pathLengths := pathfinder.Dijkstra(g, label, opts...)
 
-	results := make(chan grafik.VertexPath[T], len(vertices))
+		var totalLength float64
+		for _, length := range pathLengths {
+			totalLength += length
+		}
 
-	wg.Add(len(vertices))
-	for _, v := range vertices {
-		go func(v *grafik.Vertex[T]) {
-			defer wg.Done()
-			label := v.Label()
-			pathLengths := pathfinder.Dijkstra(g, label, opts...)
+		averageLength := totalLength / float64(len(pathLengths))
+		vertexPath := grafik.VertexPath[T]{
+			VertexLabel:   label,
+			AverageLength: averageLength,
+		}
 
-			var totalLength float64
-			for _, length := range pathLengths {
-				totalLength += length
-			}
-
-			averageLength := totalLength / float64(len(pathLengths))
-			result := grafik.VertexPath[T]{
-				VertexLabel:   label,
-				AverageLength: averageLength,
-			}
-
-			results <- result
-		}(v)
-	}
-
-	go func() {
-		wg.Wait()
-		close(results)
-	}()
-
-	for result := range results {
-		mu.Lock()
-		vertexPaths = append(vertexPaths, result)
-		mu.Unlock()
+		vertexPaths = append(vertexPaths, vertexPath)
 	}
 
 	sort.Slice(vertexPaths, func(i, j int) bool {
