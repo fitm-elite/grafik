@@ -60,11 +60,11 @@ func TestDijkstraCentrality(t *testing.T) {
 		t.Errorf("Expected len from paths is %d, got %d", 7, len(paths))
 	}
 
-	if paths[0].Label() == vE.Label() && paths[0].AverageLength() == 2.14 {
-		t.Errorf("Expected %s (%.2f), got %s (%.2f)", vE.Label(), 2.14, paths[0].Label(), paths[0].AverageLength())
+	if paths[0].GetLabel() == vE.Label() && paths[0].GetAverageLength() == 2.14 {
+		t.Errorf("Expected %s (%.2f), got %s (%.2f)", vE.Label(), 2.14, paths[0].GetLabel(), paths[0].GetAverageLength())
 	}
 
-	if paths[1].Label() == vB.Label() && paths[1].AverageLength() == 2.14 {
-		t.Errorf("Expected %s (%.2f), got %s (%.2f)", vB.Label(), 2.14, paths[0].Label(), paths[0].AverageLength())
+	if paths[1].GetLabel() == vB.Label() && paths[1].GetAverageLength() == 2.14 {
+		t.Errorf("Expected %s (%.2f), got %s (%.2f)", vB.Label(), 2.14, paths[0].GetLabel(), paths[0].GetAverageLength())
 	}
 }

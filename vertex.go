@@ -22,6 +22,22 @@ package grafik
 
 import "github.com/fitm-elite/grafik/options"
 
+// VertexPath represents path of vertex
+type VertexPath[T comparable] struct {
+	VertexLabel   T
+	AverageLength float64
+}
+
+// Label returns label of vertex path
+func (v VertexPath[T]) GetLabel() T {
+	return v.VertexLabel
+}
+
+// AverageLength returns average length of vertex path
+func (v VertexPath[T]) GetAverageLength() float64 {
+	return v.AverageLength
+}
+
 // Vertex represents a node or point in a graph
 type Vertex[T comparable] struct {
 	label    T

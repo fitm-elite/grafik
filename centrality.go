@@ -32,6 +32,6 @@ func WithDijkstraStandard() options.DijkstraOptionFunc {
 }
 
 // DijkstraCentrality return slice of Vertex that has result of centrality.
-func DijkstraCentrality[T comparable](g Grafik[T], opts ...options.DijkstraOptionFunc) []Vertex[T] {
+func DijkstraCentrality[T comparable](g Grafik[T], opts ...options.DijkstraOptionFunc) []VertexPath[T] {
 	return DijkstraCentrality(g, opts...)
 }
