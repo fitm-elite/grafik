@@ -24,7 +24,7 @@ import (
 	"testing"
 
 	"github.com/fitm-elite/grafik"
-	"github.com/fitm-elite/grafik/pathfinder"
+	"github.com/fitm-elite/grafik/options"
 )
 
 func TestDijkstraCentrality(t *testing.T) {
@@ -38,23 +38,23 @@ func TestDijkstraCentrality(t *testing.T) {
 	vK := g.AddVertexByLabel("K")
 	vQ := g.AddVertexByLabel("Q")
 
-	_, _ = g.AddEdge(vA, vB, grafik.WithEdgeWeight(1))
-	_, _ = g.AddEdge(vA, vE, grafik.WithEdgeWeight(5))
-	_, _ = g.AddEdge(vA, vJ, grafik.WithEdgeWeight(2))
+	_, _ = g.AddEdge(vA, vB, options.WithEdgeWeight(1))
+	_, _ = g.AddEdge(vA, vE, options.WithEdgeWeight(5))
+	_, _ = g.AddEdge(vA, vJ, options.WithEdgeWeight(2))
 
-	_, _ = g.AddEdge(vB, vC, grafik.WithEdgeWeight(3))
-	_, _ = g.AddEdge(vB, vE, grafik.WithEdgeWeight(1))
+	_, _ = g.AddEdge(vB, vC, options.WithEdgeWeight(3))
+	_, _ = g.AddEdge(vB, vE, options.WithEdgeWeight(1))
 
-	_, _ = g.AddEdge(vE, vC, grafik.WithEdgeWeight(4))
-	_, _ = g.AddEdge(vE, vJ, grafik.WithEdgeWeight(3))
-	_, _ = g.AddEdge(vE, vQ, grafik.WithEdgeWeight(3))
-	_, _ = g.AddEdge(vE, vK, grafik.WithEdgeWeight(2))
+	_, _ = g.AddEdge(vE, vC, options.WithEdgeWeight(4))
+	_, _ = g.AddEdge(vE, vJ, options.WithEdgeWeight(3))
+	_, _ = g.AddEdge(vE, vQ, options.WithEdgeWeight(3))
+	_, _ = g.AddEdge(vE, vK, options.WithEdgeWeight(2))
 
-	_, _ = g.AddEdge(vJ, vQ, grafik.WithEdgeWeight(1))
+	_, _ = g.AddEdge(vJ, vQ, options.WithEdgeWeight(1))
 
-	_, _ = g.AddEdge(vQ, vK, grafik.WithEdgeWeight(2))
+	_, _ = g.AddEdge(vQ, vK, options.WithEdgeWeight(2))
 
-	paths := DijkstraCentrality(g, pathfinder.WithDijkstraStandard())
+	paths := DijkstraCentrality(g, options.WithDijkstraStandard())
 
 	if len(paths) != 7 {
 		t.Errorf("Expected len from paths is %d, got %d", 7, len(paths))

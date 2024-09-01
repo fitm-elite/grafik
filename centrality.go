@@ -21,45 +21,17 @@
 package grafik
 
 import (
-	"testing"
-
 	"github.com/fitm-elite/grafik/options"
 )
 
-func TestEdgeSource(t *testing.T) {
-	vA := NewVertex("A")
-	vB := NewVertex("B")
-
-	e := NewEdge(vA, vB)
-
-	eSource := e.Source()
-	if eSource != vA {
-		t.Errorf(testErrMsgNotEqual, vA, eSource)
+// WithDijkstraStandard sets the standard algorithm for the specified dijkstra properties in the returned DijkstraOptionFunc.
+func WithDijkstraStandard() options.DijkstraOptionFunc {
+	return func(properties *options.DijkstraProperties) {
+		properties.UseStandard()
 	}
 }
 
-func TestEdgeDest(t *testing.T) {
-	vA := NewVertex("A")
-	vB := NewVertex("B")
-
-	e := NewEdge(vA, vB)
-
-	eDest := e.Destination()
-	if eDest != vB {
-		t.Errorf(testErrMsgNotEqual, vB, eDest)
-	}
-}
-
-func TestEdgeWeight(t *testing.T) {
-	weight := 4.00
-
-	vA := NewVertex("A")
-	vB := NewVertex("B")
-
-	e := NewEdge(vA, vB, options.WithEdgeWeight(weight))
-
-	eWeight := e.Weight()
-	if eWeight != weight {
-		t.Errorf(testErrMsgNotEqual, weight, eWeight)
-	}
+// DijkstraCentrality return slice of Vertex that has result of centrality.
+func DijkstraCentrality[T comparable](g Grafik[T], opts ...options.DijkstraOptionFunc) []Vertex[T] {
+	return DijkstraCentrality(g, opts...)
 }

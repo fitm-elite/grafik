@@ -18,48 +18,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package grafik
+package options
 
-import (
-	"testing"
+// DijkstraOptionFunc represent an alias of function type that modifies the specified dijkstra properties.
+type DijkstraOptionFunc func(properties *DijkstraProperties)
 
-	"github.com/fitm-elite/grafik/options"
-)
-
-func TestEdgeSource(t *testing.T) {
-	vA := NewVertex("A")
-	vB := NewVertex("B")
-
-	e := NewEdge(vA, vB)
-
-	eSource := e.Source()
-	if eSource != vA {
-		t.Errorf(testErrMsgNotEqual, vA, eSource)
-	}
+// DijkstraProperties represents the properties of an dijkstra.
+type DijkstraProperties struct {
+	useStandard bool
 }
 
-func TestEdgeDest(t *testing.T) {
-	vA := NewVertex("A")
-	vB := NewVertex("B")
-
-	e := NewEdge(vA, vB)
-
-	eDest := e.Destination()
-	if eDest != vB {
-		t.Errorf(testErrMsgNotEqual, vB, eDest)
-	}
+// UseStandard set use standard to true
+func (dj *DijkstraProperties) UseStandard() {
+	dj.useStandard = true
 }
 
-func TestEdgeWeight(t *testing.T) {
-	weight := 4.00
+// GetUseStandard return dj.useStandard from DijkstraProperties.
+func (dj DijkstraProperties) GetUseStandard() bool {
+	return dj.useStandard
+}
 
-	vA := NewVertex("A")
-	vB := NewVertex("B")
-
-	e := NewEdge(vA, vB, options.WithEdgeWeight(weight))
-
-	eWeight := e.Weight()
-	if eWeight != weight {
-		t.Errorf(testErrMsgNotEqual, weight, eWeight)
+// WithDijkstraStandard sets the standard algorithm for the specified dijkstra properties in the returned DijkstraOptionFunc.
+func WithDijkstraStandard() DijkstraOptionFunc {
+	return func(properties *DijkstraProperties) {
+		properties.useStandard = true
 	}
 }

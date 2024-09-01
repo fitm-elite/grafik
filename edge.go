@@ -20,32 +20,17 @@
 
 package grafik
 
-// EdgeOptionFunc represent an alias of function type that
-// modifies the specified edge properties.
-type EdgeOptionFunc func(properties *EdgeProperties)
-
-// EdgeProperties represents the properties of an edge.
-type EdgeProperties struct {
-	weight float64
-}
-
-// WithEdgeWeight sets the edge weight for the specified edge
-// properties in the returned EdgeOptionFunc.
-func WithEdgeWeight(weight float64) EdgeOptionFunc {
-	return func(properties *EdgeProperties) {
-		properties.weight = weight
-	}
-}
+import "github.com/fitm-elite/grafik/options"
 
 // Edge represents an edges in a graph. It contains start and end points.
 type Edge[T comparable] struct {
 	source *Vertex[T] // start point of the edges
 	dest   *Vertex[T] // destination or end point of the edges
 
-	properties EdgeProperties
+	properties options.EdgeProperties
 }
 
-func NewEdge[T comparable](source *Vertex[T], dest *Vertex[T], opts ...EdgeOptionFunc) *Edge[T] {
+func NewEdge[T comparable](source *Vertex[T], dest *Vertex[T], opts ...options.EdgeOptionFunc) *Edge[T] {
 	e := &Edge[T]{
 		source: source,
 		dest:   dest,
@@ -69,5 +54,5 @@ func (e Edge[T]) Destination() *Vertex[T] {
 
 // Weight returns the weight of the edge.
 func (e *Edge[T]) Weight() float64 {
-	return e.properties.weight
+	return e.properties.Weight()
 }

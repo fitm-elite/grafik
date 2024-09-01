@@ -18,48 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package grafik
+package entity
 
-import (
-	"testing"
+import "github.com/fitm-elite/grafik"
 
-	"github.com/fitm-elite/grafik/options"
-)
-
-func TestEdgeSource(t *testing.T) {
-	vA := NewVertex("A")
-	vB := NewVertex("B")
-
-	e := NewEdge(vA, vB)
-
-	eSource := e.Source()
-	if eSource != vA {
-		t.Errorf(testErrMsgNotEqual, vA, eSource)
-	}
-}
-
-func TestEdgeDest(t *testing.T) {
-	vA := NewVertex("A")
-	vB := NewVertex("B")
-
-	e := NewEdge(vA, vB)
-
-	eDest := e.Destination()
-	if eDest != vB {
-		t.Errorf(testErrMsgNotEqual, vB, eDest)
-	}
-}
-
-func TestEdgeWeight(t *testing.T) {
-	weight := 4.00
-
-	vA := NewVertex("A")
-	vB := NewVertex("B")
-
-	e := NewEdge(vA, vB, options.WithEdgeWeight(weight))
-
-	eWeight := e.Weight()
-	if eWeight != weight {
-		t.Errorf(testErrMsgNotEqual, weight, eWeight)
-	}
-}
+// Grafik[T comparable] It's using for avoid cycle import.
+type Grafik[T comparable] grafik.Grafik[T]

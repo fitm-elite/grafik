@@ -18,48 +18,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package grafik
+package options
 
-import (
-	"testing"
+// VertexOptionFunc represent an alias of function type that modifies the specified vertex properties.
+type VertexOptionFunc func(properties *VertexProperties)
 
-	"github.com/fitm-elite/grafik/options"
-)
-
-func TestEdgeSource(t *testing.T) {
-	vA := NewVertex("A")
-	vB := NewVertex("B")
-
-	e := NewEdge(vA, vB)
-
-	eSource := e.Source()
-	if eSource != vA {
-		t.Errorf(testErrMsgNotEqual, vA, eSource)
-	}
+// VertexProperties represents the properties of an edge.
+type VertexProperties struct {
+	weight float64
 }
 
-func TestEdgeDest(t *testing.T) {
-	vA := NewVertex("A")
-	vB := NewVertex("B")
-
-	e := NewEdge(vA, vB)
-
-	eDest := e.Destination()
-	if eDest != vB {
-		t.Errorf(testErrMsgNotEqual, vB, eDest)
-	}
+// Weight returns v.weight from VertexProperties
+func (v VertexProperties) Weight() float64 {
+	return v.weight
 }
 
-func TestEdgeWeight(t *testing.T) {
-	weight := 4.00
-
-	vA := NewVertex("A")
-	vB := NewVertex("B")
-
-	e := NewEdge(vA, vB, options.WithEdgeWeight(weight))
-
-	eWeight := e.Weight()
-	if eWeight != weight {
-		t.Errorf(testErrMsgNotEqual, weight, eWeight)
+// WithVertexWeight sets the edge weight for the specified vertex properties in the returned VertexOptionFunc.
+func WithVertexWeight(weight float64) VertexOptionFunc {
+	return func(properties *VertexProperties) {
+		properties.weight = weight
 	}
 }

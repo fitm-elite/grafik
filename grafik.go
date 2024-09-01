@@ -22,6 +22,8 @@ package grafik
 
 import (
 	"errors"
+
+	"github.com/fitm-elite/grafik/options"
 )
 
 var (
@@ -42,7 +44,7 @@ type VertexFunc[T comparable] interface {
 	//
 	// If there is a vertex with the same label in the graph, returns nil.
 	// Otherwise, returns the created vertex.
-	AddVertexByLabel(label T, options ...VertexOptionFunc) *Vertex[T]
+	AddVertexByLabel(label T, options ...options.VertexOptionFunc) *Vertex[T]
 
 	// AddVertex adds the input vertex to the graph. It doesn't add
 	// vertex to the graph if the input vertex label is already exists
@@ -74,7 +76,7 @@ type EdgeFunc[T comparable] interface {
 	// It creates the input vertices if they don't exist in the graph.
 	// If any of the specified vertices is nil, returns nil.
 	// If edge already exist, returns error.
-	AddEdge(from, to *Vertex[T], opts ...EdgeOptionFunc) (*Edge[T], error)
+	AddEdge(from, to *Vertex[T], opts ...options.EdgeOptionFunc) (*Edge[T], error)
 
 	// GetAllEdges returns a slice of all edges connecting source vertex to
 	// target vertex if such vertices exist in this graph.
@@ -140,8 +142,8 @@ func (g *grafik[T]) findVertex(label T) *Vertex[T] {
 //
 // If there is a vertex with the same label in the graph, returns nil.
 // Otherwise, returns the created vertex.
-func (g *grafik[T]) AddVertexByLabel(label T, opts ...VertexOptionFunc) *Vertex[T] {
-	var properties VertexProperties
+func (g *grafik[T]) AddVertexByLabel(label T, opts ...options.VertexOptionFunc) *Vertex[T] {
+	var properties options.VertexProperties
 	for _, opt := range opts {
 		opt(&properties)
 	}
@@ -198,7 +200,7 @@ func (g *grafik[T]) ContainsVertex(v *Vertex[T]) bool {
 // the baseGraph struct. Note that it doesn't add the neighbor to the source vertex.
 //
 // It returns the created edge.
-func (g *grafik[T]) addToEdgeMap(from, to *Vertex[T], opts ...EdgeOptionFunc) *Edge[T] {
+func (g *grafik[T]) addToEdgeMap(from, to *Vertex[T], opts ...options.EdgeOptionFunc) *Edge[T] {
 	edge := NewEdge(from, to, opts...)
 	if _, ok := g.edges[from.label]; !ok {
 		g.edges[from.label] = map[T]*Edge[T]{to.label: edge}
@@ -219,7 +221,7 @@ func (g *grafik[T]) addToEdgeMap(from, to *Vertex[T], opts ...EdgeOptionFunc) *E
 // It creates the input vertices if they don't exist in the graph.
 // If any of the specified vertices is nil, returns nil.
 // If edge already exist, returns error.
-func (g *grafik[T]) AddEdge(from, to *Vertex[T], opts ...EdgeOptionFunc) (*Edge[T], error) {
+func (g *grafik[T]) AddEdge(from, to *Vertex[T], opts ...options.EdgeOptionFunc) (*Edge[T], error) {
 	if from == nil || to == nil {
 		return nil, ErrNilVertices
 	}

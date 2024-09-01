@@ -25,36 +25,39 @@ import (
 	"sync"
 
 	"github.com/fitm-elite/grafik"
+	"github.com/fitm-elite/grafik/entity"
+	"github.com/fitm-elite/grafik/options"
 	"github.com/fitm-elite/grafik/pathfinder"
 )
 
-// vertexPath represents path of vertex
-type vertexPath[T comparable] struct {
+// VertexPath represents path of vertex
+type VertexPath[T comparable] struct {
 	vertexLabel   T
 	averageLength float64
 }
 
 // Label returns label of vertex path
-func (v vertexPath[T]) Label() T {
+func (v VertexPath[T]) Label() T {
 	return v.vertexLabel
 }
 
 // AverageLength returns average length of vertex path
-func (v vertexPath[T]) AverageLength() float64 {
+func (v VertexPath[T]) AverageLength() float64 {
 	return v.averageLength
 }
 
 // DijkstraCentrality It's using a dijkstra method to find shortest path in each vertex
 // and calculate to find an average value in each path to find a centroid.
 //
-// Returns []vertexPath[T]
-func DijkstraCentrality[T comparable](g grafik.Grafik[T], opts ...pathfinder.DijkstraOptionFunc) []vertexPath[T] {
+// Returns []VertexPath[T]
+func DijkstraCentrality[T comparable](g entity.Grafik[T], opts ...options.DijkstraOptionFunc) []VertexPath[T] {
 	vertices := g.GetAllVertices()
-	vertexPaths := make([]vertexPath[T], 0, len(vertices))
+	vertexPaths := make([]VertexPath[T], 0, len(vertices))
+
 	var mu sync.Mutex
 	var wg sync.WaitGroup
 
-	results := make(chan vertexPath[T], len(vertices))
+	results := make(chan VertexPath[T], len(vertices))
 
 	wg.Add(len(vertices))
 	for _, v := range vertices {
@@ -69,7 +72,7 @@ func DijkstraCentrality[T comparable](g grafik.Grafik[T], opts ...pathfinder.Dij
 			}
 
 			averageLength := totalLength / float64(len(pathLengths))
-			result := vertexPath[T]{
+			result := VertexPath[T]{
 				vertexLabel:   label,
 				averageLength: averageLength,
 			}

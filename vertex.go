@@ -20,20 +20,7 @@
 
 package grafik
 
-// VertexOptionFunc represent an alias of function type that modifies the specified vertex properties.
-type VertexOptionFunc func(properties *VertexProperties)
-
-// VertexProperties represents the properties of an edge.
-type VertexProperties struct {
-	weight float64
-}
-
-// WithVertexWeight sets the edge weight for the specified vertex properties in the returned VertexOptionFunc.
-func WithVertexWeight(weight float64) VertexOptionFunc {
-	return func(properties *VertexProperties) {
-		properties.weight = weight
-	}
-}
+import "github.com/fitm-elite/grafik/options"
 
 // Vertex represents a node or point in a graph
 type Vertex[T comparable] struct {
@@ -42,10 +29,10 @@ type Vertex[T comparable] struct {
 
 	neighbors []*Vertex[T]
 
-	properties VertexProperties
+	properties options.VertexProperties
 }
 
-func NewVertex[T comparable](label T, opts ...VertexOptionFunc) *Vertex[T] {
+func NewVertex[T comparable](label T, opts ...options.VertexOptionFunc) *Vertex[T] {
 	v := &Vertex[T]{label: label}
 	for _, opt := range opts {
 		opt(&v.properties)
@@ -109,5 +96,5 @@ func (v *Vertex[T]) Neighbors() []*Vertex[T] {
 
 // Weight returns vertex weight.
 func (v *Vertex[T]) Weight() float64 {
-	return v.properties.weight
+	return v.properties.Weight()
 }

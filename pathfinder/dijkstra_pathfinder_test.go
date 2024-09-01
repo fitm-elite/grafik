@@ -24,6 +24,7 @@ import (
 	"testing"
 
 	"github.com/fitm-elite/grafik"
+	"github.com/fitm-elite/grafik/options"
 )
 
 func TestSimpleDijkstra(t *testing.T) {
@@ -34,11 +35,11 @@ func TestSimpleDijkstra(t *testing.T) {
 	vC := g.AddVertexByLabel("C")
 	vD := g.AddVertexByLabel("D")
 
-	_, _ = g.AddEdge(vA, vB, grafik.WithEdgeWeight(4))
-	_, _ = g.AddEdge(vA, vC, grafik.WithEdgeWeight(3))
-	_, _ = g.AddEdge(vB, vC, grafik.WithEdgeWeight(1))
-	_, _ = g.AddEdge(vB, vD, grafik.WithEdgeWeight(2))
-	_, _ = g.AddEdge(vC, vD, grafik.WithEdgeWeight(4))
+	_, _ = g.AddEdge(vA, vB, options.WithEdgeWeight(4))
+	_, _ = g.AddEdge(vA, vC, options.WithEdgeWeight(3))
+	_, _ = g.AddEdge(vB, vC, options.WithEdgeWeight(1))
+	_, _ = g.AddEdge(vB, vD, options.WithEdgeWeight(2))
+	_, _ = g.AddEdge(vC, vD, options.WithEdgeWeight(4))
 
 	// use not existing vertex
 	dist := Dijkstra(g, "X")
@@ -70,14 +71,14 @@ func TestStandardDijkstra(t *testing.T) {
 	v3 := g.AddVertexByLabel(3)
 	v4 := g.AddVertexByLabel(4)
 
-	_, _ = g.AddEdge(v1, v2, grafik.WithEdgeWeight(4))
-	_, _ = g.AddEdge(v1, v3, grafik.WithEdgeWeight(3))
-	_, _ = g.AddEdge(v2, v3, grafik.WithEdgeWeight(1))
-	_, _ = g.AddEdge(v2, v4, grafik.WithEdgeWeight(2))
-	_, _ = g.AddEdge(v3, v4, grafik.WithEdgeWeight(4))
+	_, _ = g.AddEdge(v1, v2, options.WithEdgeWeight(4))
+	_, _ = g.AddEdge(v1, v3, options.WithEdgeWeight(3))
+	_, _ = g.AddEdge(v2, v3, options.WithEdgeWeight(1))
+	_, _ = g.AddEdge(v2, v4, options.WithEdgeWeight(2))
+	_, _ = g.AddEdge(v3, v4, options.WithEdgeWeight(4))
 
 	// use not existing vertex
-	dist := Dijkstra(g, 0, WithDijkstraStandard())
+	dist := Dijkstra(g, 0, options.WithDijkstraStandard())
 	if len(dist) > 0 {
 		t.Errorf("Expected dist map length be 0, got %d", len(dist))
 	}

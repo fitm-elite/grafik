@@ -20,7 +20,11 @@
 
 package grafik
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/fitm-elite/grafik/options"
+)
 
 func TestVertexLabelFunc(t *testing.T) {
 	label := "A"
@@ -37,7 +41,7 @@ func TestVertexWeightFunc(t *testing.T) {
 	label := "B"
 	weight := 4.00
 
-	vB := NewVertex(label, WithVertexWeight(weight))
+	vB := NewVertex(label, options.WithVertexWeight(weight))
 
 	vBWeight := vB.Weight()
 	if vBWeight != weight {

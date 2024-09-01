@@ -24,23 +24,9 @@ import (
 	"math"
 
 	"github.com/fitm-elite/grafik"
+	"github.com/fitm-elite/grafik/options"
 	"github.com/fitm-elite/grafik/queue"
 )
-
-// DijkstraOptionFunc represent an alias of function type that modifies the specified dijkstra properties.
-type DijkstraOptionFunc func(properties *DijkstraProperties)
-
-// DijkstraProperties represents the properties of an dijkstra.
-type DijkstraProperties struct {
-	useStandard bool
-}
-
-// WithDijkstraStandard sets the standard algorithm for the specified dijkstra properties in the returned DijkstraOptionFunc.
-func WithDijkstraStandard() DijkstraOptionFunc {
-	return func(properties *DijkstraProperties) {
-		properties.useStandard = true
-	}
-}
 
 // dijkstraVertex represents dijkstra vertex.
 type dijkstraVertex[T comparable] struct {
@@ -72,8 +58,8 @@ func newDijkstraVertex[T comparable](label T) *dijkstraVertex[T] {
 //
 // It returns the shortest distances from the starting vertex to all other vertices
 // in the graph.
-func Dijkstra[T comparable](g grafik.Grafik[T], start T, opts ...DijkstraOptionFunc) map[T]float64 {
-	var properties DijkstraProperties
+func Dijkstra[T comparable](g grafik.Grafik[T], start T, opts ...options.DijkstraOptionFunc) map[T]float64 {
+	var properties options.DijkstraProperties
 	for _, opt := range opts {
 		opt(&properties)
 	}
@@ -86,7 +72,7 @@ func Dijkstra[T comparable](g grafik.Grafik[T], start T, opts ...DijkstraOptionF
 	}
 
 	// useStandard checker
-	if !properties.useStandard {
+	if !properties.GetUseStandard() {
 		vertices := g.GetAllVertices()
 		for _, v := range vertices {
 			dist[v.Label()] = math.MaxFloat64
