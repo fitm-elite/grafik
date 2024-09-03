@@ -22,6 +22,7 @@ package centrality
 
 import (
 	"sort"
+	"sync"
 
 	"github.com/fitm-elite/grafik"
 	"github.com/fitm-elite/grafik/entity"
@@ -32,27 +33,47 @@ import (
 // DijkstraCentrality It's using a dijkstra method to find shortest path in each vertex
 // and calculate to find an average value in each path to find a centroid.
 //
-// Returns []VertexPath[T]
+// Return []VertexPath[T]
 func DijkstraCentrality[T comparable](g entity.Grafik[T], opts ...options.DijkstraOptionFunc) []grafik.VertexPath[T] {
 	vertices := g.GetAllVertices()
 	vertexPaths := make([]grafik.VertexPath[T], 0, len(vertices))
 
-	for _, vertex := range vertices {
-		label := vertex.Label()
-		pathLengths := pathfinder.Dijkstra(g, label, opts...)
+	var mu sync.Mutex
+	var wg sync.WaitGroup
 
-		var totalLength float64
-		for _, length := range pathLengths {
-			totalLength += length
-		}
+	results := make(chan grafik.VertexPath[T], len(vertices))
 
-		averageLength := totalLength / float64(len(pathLengths))
-		vertexPath := grafik.VertexPath[T]{
-			VertexLabel:   label,
-			AverageLength: averageLength,
-		}
+	wg.Add(len(vertices))
+	for _, v := range vertices {
+		go func(v *grafik.Vertex[T]) {
+			defer wg.Done()
+			label := v.Label()
+			pathLengths := pathfinder.Dijkstra(g, label, opts...)
 
-		vertexPaths = append(vertexPaths, vertexPath)
+			var totalLength float64
+			for _, length := range pathLengths {
+				totalLength += length
+			}
+
+			averageLength := totalLength / float64(len(pathLengths))
+			result := grafik.VertexPath[T]{
+				VertexLabel:   label,
+				AverageLength: averageLength,
+			}
+
+			results <- result
+		}(v)
+	}
+
+	go func() {
+		wg.Wait()
+		close(results)
+	}()
+
+	for result := range results {
+		mu.Lock()
+		vertexPaths = append(vertexPaths, result)
+		mu.Unlock()
 	}
 
 	sort.Slice(vertexPaths, func(i, j int) bool {
